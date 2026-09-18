@@ -1,7 +1,7 @@
 from polyelectrolytes import *
-import numpy as np
+import time
 
-p = Polieletrolito()
+p = Polyelectrolyte()
 
 filename = '260902/fig11/'
 

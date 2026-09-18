@@ -1,47 +1,109 @@
+"""
+Numerical solution of a polyelectrolyte system.
+
+This module implements a numerical solver for a coupled system of
+nonlinear differential equations describing the electrostatic potential
+and polymer concentration profiles in a polyelectrolyte system.
+
+The equations are discretised using finite differences and solved
+iteratively using a damped Newton–Raphson method. The resulting linear
+systems are handled using sparse matrix routines from SciPy.
+
+The solver supports Dirichlet and Neumann boundary conditions for both
+the electrostatic potential and the square root of the normalised
+polymer concentration.
+
+The simulation results are stored in pickle files containing:
+    - Spatial coordinates.
+    - Interleaved electrostatic potential and square-root
+      concentration values.
+    - A dictionary containing the simulation parameters.
+
+Dependencies:
+    - Python 3
+    - NumPy
+    - SciPy
+
+Warning:
+    Only load pickle files from trusted sources, as unpickling
+    untrusted data can execute arbitrary code.
+"""
+
 import pickle
 import numpy as np
 import scipy as sp
 
-class Polieletrolito:
+class Polyelectrolyte:
+    """
+    Represent a polyelectrolyte system and its numerical parameters.
+
+    This class defines the physical parameters, boundary conditions,
+    numerical settings, and output filename required to solve the
+    coupled equations for the electrostatic potential and normalised
+    polymer concentration profiles.
+    """
+
     def __init__(self):
+        """
+        Initialise the polyelectrolyte system with default parameters.
+
+        The parameter dictionary contains the physical properties of
+        the system, numerical discretisation settings, boundary
+        conditions, convergence tolerance, and normalisation scheme.
+        """
+
         self.params = {
-            # Tipo de condição de contorno: 'potential' (y(0)=y_s) ou 'charge' (y'(0)=yprime0)
-            # 'bc_type': 'potential',
 
-            # Se 'potential', fixe o potencial superficial (adimensional) y(0)=y_s
-            'a': 5,
-            'c_salt': 6.02e-8,  # A^{-3} 0,1 mM #fig 1a
-            'f': 1,
-            # 'y_s': -1,  # típico: -0.5 a -2 (em unidades e*psi/kBT)1
-            'phib2': 1e-6,
-            'v': 50,
-            'e': 80,
-            'T': 300,
-            'lb': 7.2,  # angstrom
-            'w2': 0.0,
+            # ========================================================
+            # Physical parameters
+            # ========================================================
 
-            # Se 'charge', fixe a derivada do potencial na parede
-            # 'yprime0': 1.0,
+            'a': 5,  # Monomer size.
+            'c_salt': 6.02e-8,  # Bulk salt concentration (Å^-3; 0.1 mM).
+            'f': 1,  # Fraction of charged monomers.
+            'phib2': 1e-6,  # Bulk polymer concentration parameter.
+            'v': 50,  # Excluded-volume interaction parameter.
+            'e': 80,  # Relative dielectric permittivity.
+            'T': 300,  # Temperature (K).
+            'lb': 7.2,  # Bjerrum length (Å).
+            'w2': 0.0,  # Higher-order polymer interaction parameter.
 
-            # Grade numérica
-            'x0': 0.,
-            'xn': 60.,
-            'nx': 11,
-            # 'h' : 0.1,
-            'relaxation_tax': 0.007,
+            # ========================================================
+            # Spatial discretisation
+            # ========================================================
 
-            'y0': -1,
-            'h0': 0,
-            'yn': 0,
-            'hn': 1,
+            'x0': 0.,  # Initial spatial coordinate.
+            'xn': 60.,  # Final spatial coordinate.
+            'nx': 11,  # Number of spatial grid points.
 
+            # ========================================================
+            # Numerical solver settings
+            # ========================================================
+
+            'relaxation_factor': 0.007,  # Newton–Raphson relaxation factor.
+            'error': 1e-6,  # Convergence tolerance.
+
+            # ========================================================
+            # Boundary conditions
+            # ========================================================
+
+            # Boundary values for the electrostatic potential (y)
+            # and the square root of the normalised concentration (h).
+
+            'y0': -1,  # Potential boundary value at x = x0.
+            'h0': 0,  # Concentration-related boundary value at x = x0.
+            'yn': 0,  # Potential boundary value at x = xn.
+            'hn': 1,  # Concentration-related boundary value at x = xn.
+
+            # Select Dirichlet (True) or Neumann (False) conditions
+            # for y(x0), h(x0), y(xn), and h(xn), respectively.
             'dirichlet_boundary': [True, True, True, True],
 
-            'boundary': 'dirichlet',
-
-            'error': 1e-6,
-
-            'normalisation':0
+            # Select the characteristic length used for normalisation:
+            # 0: D = 30
+            # 1: D = Bjerrum length
+            # 2: D = 1
+            'normalisation': 0
         }
 
         self.filename = 'file.pkl'
