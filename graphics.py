@@ -44,7 +44,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Define the directory containing the simulation results.
-directory = "260902/fig6_1/"
+directory = "260902/fig3/"
 
 # Retrieve the names of all files in the directory.
 list_dir = os.listdir(directory)
@@ -53,7 +53,7 @@ list_dir = os.listdir(directory)
 parameter = ['phib2', 'w2', 'xn', 'nx', 'lambda', 'f', 'v', 'y0', 's']
 
 # Select the parameter to be varied (the fourth from the end: 'f').
-parameter = parameter[-4]
+parameter = parameter[0]
 
 # Find the position of the selected parameter in the filename.
 # Assumes that filenames contain parameter names and their corresponding
