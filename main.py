@@ -1,7 +1,7 @@
 from polyelectrolytes import *
 import numpy as np
 
-p = Polieletrolito(gpu=False)
+p = Polieletrolito()
 
 filename = '260902/fig11/'
 
