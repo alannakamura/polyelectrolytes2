@@ -1,4 +1,4 @@
-from polieletrolito import *
+from polyelectrolytes import *
 import numpy as np
 
 p = Polieletrolito(gpu=False)
