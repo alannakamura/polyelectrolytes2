@@ -44,7 +44,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Define the directory containing the simulation results.
-directory = "260902/fig3/"
+directory = "260918/fig3/"
 
 # Retrieve the names of all files in the directory.
 list_dir = os.listdir(directory)

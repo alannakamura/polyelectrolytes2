@@ -29,7 +29,7 @@ import time
 p = Polyelectrolyte()
 
 # Define the output directory for the simulation results.
-filename = '260902/fig3/'
+filename = '260918/fig3/'
 
 # Record the start time using a high-resolution performance counter.
 inicio1 = time.perf_counter()
